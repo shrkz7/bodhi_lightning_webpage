@@ -1,0 +1,22 @@
+{
+  "name": "bodhilightning-quote-app",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "BODHILIGHTNING Perambalur - Finolex Quotation Generator and Admin Management System",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"green,blue\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "node server/server.js",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
