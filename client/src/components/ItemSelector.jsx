@@ -23,10 +23,12 @@ export default function ItemSelector({ products, onAddToCart }) {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('Red');
   const [quantity, setQuantity] = useState(1);
+  const [quantityError, setQuantityError] = useState(false);
   const [addedAnimation, setAddedAnimation] = useState(false);
   const [isColorDropdownOpen, setIsColorDropdownOpen] = useState(false);
 
   const dropdownRef = useRef(null);
+  const quantityInputRef = useRef(null);
 
   // Close color dropdown on outside click
   useEffect(() => {
@@ -112,7 +114,13 @@ export default function ItemSelector({ products, onAddToCart }) {
     e.preventDefault();
     if (!currentProduct) return;
 
-    const count = Math.max(1, parseInt(quantity) || 1);
+    if (quantity === '' || quantity === null || isNaN(parseInt(quantity, 10)) || parseInt(quantity, 10) < 1) {
+      setQuantityError(true);
+      quantityInputRef.current?.focus();
+      return;
+    }
+
+    const count = parseInt(quantity, 10);
     const itemToAdd = {
       productId: currentProduct.id,
       category: currentProduct.category,
@@ -301,11 +309,32 @@ export default function ItemSelector({ products, onAddToCart }) {
             </label>
             <div className="flex items-center">
               <input
+                ref={quantityInputRef}
                 type="number"
                 min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-full bg-zinc-50 border border-zinc-300 rounded-xl px-2 py-2.5 text-center text-zinc-900 font-bold text-sm focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                placeholder="1"
+                value={quantity === null ? '' : quantity}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === '') {
+                    setQuantity('');
+                    setQuantityError(true);
+                  } else {
+                    const parsed = parseInt(val, 10);
+                    if (isNaN(parsed) || parsed < 1) {
+                      setQuantity('');
+                      setQuantityError(true);
+                    } else {
+                      setQuantity(parsed);
+                      setQuantityError(false);
+                    }
+                  }
+                }}
+                className={`w-full bg-zinc-50 border rounded-xl px-2 py-2.5 text-center font-bold text-sm transition-all focus:ring-2 focus:bg-white ${
+                  quantity === '' || quantity === null || quantityError
+                    ? 'border-amber-400 bg-amber-50/60 text-amber-900 focus:ring-amber-400'
+                    : 'border-zinc-300 text-zinc-900 focus:ring-emerald-500'
+                }`}
               />
             </div>
           </div>
@@ -316,7 +345,9 @@ export default function ItemSelector({ products, onAddToCart }) {
               type="submit"
               disabled={!currentProduct}
               className={`w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm text-white shadow-sm transition-all cursor-pointer ${
-                addedAnimation 
+                quantity === '' || quantity === null || parseInt(quantity, 10) < 1
+                  ? 'bg-amber-500 hover:bg-amber-600 active:scale-98 shadow-amber-200'
+                  : addedAnimation 
                   ? 'bg-emerald-600 ring-2 ring-emerald-400' 
                   : 'bg-emerald-700 hover:bg-emerald-800 active:scale-98'
               }`}
@@ -326,6 +357,8 @@ export default function ItemSelector({ products, onAddToCart }) {
                   <Check className="w-4 h-4 text-amber-300" />
                   <span>Added!</span>
                 </>
+              ) : (quantity === '' || quantity === null || parseInt(quantity, 10) < 1) ? (
+                <span className="truncate">Add value to proceed</span>
               ) : (
                 <>
                   <Plus className="w-4 h-4" />
@@ -339,7 +372,7 @@ export default function ItemSelector({ products, onAddToCart }) {
 
         {/* Small live subtotal bar with colored dot */}
         {currentProduct && (
-          <div className="flex items-center justify-between text-xs text-zinc-500 pt-1 px-1">
+          <div className="flex flex-wrap items-center justify-between text-xs text-zinc-500 pt-1 px-1 gap-2">
             <div className="flex items-center gap-1.5 truncate">
               <span>Selected:</span>
               <strong className="text-zinc-800">{currentProduct.category}</strong>
@@ -357,9 +390,17 @@ export default function ItemSelector({ products, onAddToCart }) {
               />
               <span className="font-semibold text-zinc-800">{selectedColor}</span>
             </div>
-            <span className="font-mono flex-shrink-0 ml-2">
-              Unit Rate: <strong className="text-emerald-700 font-bold">₹{currentProduct.price.toLocaleString('en-IN')}</strong> × {quantity} = <strong className="text-zinc-900 font-bold">₹{(currentProduct.price * quantity).toLocaleString('en-IN')}</strong>
-            </span>
+            {quantity !== '' && quantity !== null && parseInt(quantity, 10) > 0 ? (
+              <span className="font-mono flex-shrink-0 ml-2">
+                Unit Rate: <strong className="text-emerald-700 font-bold">₹{currentProduct.price.toLocaleString('en-IN')}</strong> × {quantity} = <strong className="text-zinc-900 font-bold">₹{(currentProduct.price * parseInt(quantity, 10)).toLocaleString('en-IN')}</strong>
+              </span>
+            ) : (
+              <span className="font-semibold text-amber-700 flex-shrink-0 flex items-center gap-1.5">
+                <span>Unit Rate: <strong className="text-emerald-700 font-bold">₹{currentProduct.price.toLocaleString('en-IN')}</strong></span>
+                <span className="text-zinc-300">•</span>
+                <span className="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-bold text-[11px]">Add value to proceed</span>
+              </span>
+            )}
           </div>
         )}
 
