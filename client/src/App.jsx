@@ -172,9 +172,6 @@ export default function App() {
                 <span className="text-xl font-black text-amber-300 font-mono">
                   {storeInfo.priceListDate}
                 </span>
-                <span className="text-[11px] text-emerald-200 block mt-1">
-                  GST 18% Calculated Automatically
-                </span>
               </div>
             </div>
 
