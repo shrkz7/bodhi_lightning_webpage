@@ -1,30 +1,81 @@
 import * as htmlToImage from 'html-to-image';
 
 /**
- * Downloads a DOM element as a high-resolution PNG image
- * Uses fixed document width (820px) to guarantee clean layout and prevent text overlap
+ * Accurately captures the quotation card DOM element into a full-height PNG Data URL.
+ * Automatically handles multiple order lines by computing exact content scrollHeight,
+ * resetting parent scroll offsets, and applying fixed 820px canvas dimensions.
  */
-export async function downloadQuoteImage(elementId, customerName = 'Customer', quoteId = 'BLQ') {
+async function captureQuoteDataUrl(elementId) {
   const node = document.getElementById(elementId);
   if (!node) {
     throw new Error("Quotation card element not found");
   }
 
-  // Generate high quality PNG with standard fixed layout
-  const dataUrl = await htmlToImage.toPng(node, {
-    quality: 1,
-    pixelRatio: 2,
-    backgroundColor: '#ffffff',
-    cacheBust: true,
-    width: 820,
-    style: {
-      width: '820px',
-      minWidth: '820px',
-      maxWidth: '820px',
-      margin: '0',
-      boxSizing: 'border-box'
+  // Find scrollable parent container (if any)
+  const scrollContainer = node.parentElement;
+  const prevScrollTop = scrollContainer ? scrollContainer.scrollTop : 0;
+  const prevScrollLeft = scrollContainer ? scrollContainer.scrollLeft : 0;
+
+  try {
+    // 1. Temporarily reset scroll offset so the captured canvas is not shifted or cut off
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0;
+      scrollContainer.scrollLeft = 0;
     }
-  });
+
+    // 2. Allow DOM layout to settle
+    await new Promise(resolve => setTimeout(resolve, 60));
+
+    // 3. Compute full content dimensions (including all table rows, summary, terms, and footer)
+    const fullWidth = 820;
+    const computedRect = node.getBoundingClientRect();
+    const fullHeight = Math.ceil(
+      Math.max(
+        node.scrollHeight,
+        node.offsetHeight,
+        node.clientHeight,
+        computedRect.height
+      )
+    ) + 6;
+
+    const renderOptions = {
+      quality: 1,
+      pixelRatio: 2,
+      backgroundColor: '#ffffff',
+      cacheBust: true,
+      width: fullWidth,
+      height: fullHeight,
+      canvasWidth: fullWidth,
+      canvasHeight: fullHeight,
+      style: {
+        width: `${fullWidth}px`,
+        minWidth: `${fullWidth}px`,
+        maxWidth: `${fullWidth}px`,
+        height: `${fullHeight}px`,
+        minHeight: `${fullHeight}px`,
+        maxHeight: 'none',
+        overflow: 'visible',
+        margin: '0',
+        transform: 'none',
+        boxSizing: 'border-box'
+      }
+    };
+
+    return await htmlToImage.toPng(node, renderOptions);
+  } finally {
+    // 4. Always restore previous scroll position
+    if (scrollContainer) {
+      scrollContainer.scrollTop = prevScrollTop;
+      scrollContainer.scrollLeft = prevScrollLeft;
+    }
+  }
+}
+
+/**
+ * Downloads a DOM element as a high-resolution PNG image
+ */
+export async function downloadQuoteImage(elementId, customerName = 'Customer', quoteId = 'BLQ') {
+  const dataUrl = await captureQuoteDataUrl(elementId);
 
   const cleanName = customerName.replace(/[^a-zA-Z0-9]/g, '_') || 'Quote';
   const fileName = `Bodhilightning_Quote_${cleanName}_${quoteId}.png`;
@@ -41,25 +92,11 @@ export async function downloadQuoteImage(elementId, customerName = 'Customer', q
  * Converts DOM element to an image File object for Web Share API
  */
 export async function getQuoteImageFile(elementId, customerName = 'Customer', quoteId = 'BLQ') {
-  const node = document.getElementById(elementId);
-  if (!node) return null;
+  const dataUrl = await captureQuoteDataUrl(elementId);
+  if (!dataUrl) return null;
 
-  const blob = await htmlToImage.toBlob(node, {
-    quality: 1,
-    pixelRatio: 2,
-    backgroundColor: '#ffffff',
-    cacheBust: true,
-    width: 820,
-    style: {
-      width: '820px',
-      minWidth: '820px',
-      maxWidth: '820px',
-      margin: '0',
-      boxSizing: 'border-box'
-    }
-  });
-
-  if (!blob) return null;
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
 
   const cleanName = customerName.replace(/[^a-zA-Z0-9]/g, '_') || 'Quote';
   const fileName = `Bodhilightning_Quote_${cleanName}_${quoteId}.png`;

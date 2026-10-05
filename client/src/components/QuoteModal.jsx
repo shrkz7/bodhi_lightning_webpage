@@ -53,10 +53,10 @@ export default function QuoteModal({ quote, storeInfo, onClose }) {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 print:p-0 print:bg-white">
       
-      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full overflow-hidden border border-zinc-200 flex flex-col my-auto max-h-[96vh] print:max-h-none print:shadow-none print:border-none print:rounded-none">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full border border-zinc-200 flex flex-col my-auto h-[92vh] sm:h-[94vh] overflow-hidden print:h-auto print:max-h-none print:shadow-none print:border-none print:rounded-none">
         
         {/* Top Control Bar (Hidden when printing) */}
-        <div className="bg-zinc-900 text-white px-5 py-3.5 flex items-center justify-between print:hidden">
+        <div className="bg-zinc-900 text-white px-5 py-3.5 flex items-center justify-between flex-shrink-0 print:hidden">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="text-sm font-bold tracking-wide">Official Quotation Preview</span>
@@ -82,34 +82,36 @@ export default function QuoteModal({ quote, storeInfo, onClose }) {
 
         {/* Status Toast */}
         {shareSuccessMsg && (
-          <div className="bg-emerald-50 text-emerald-800 px-5 py-2.5 text-xs sm:text-sm font-medium border-b border-emerald-200 flex items-center gap-2 animate-fadeIn print:hidden">
+          <div className="bg-emerald-50 text-emerald-800 px-5 py-2.5 text-xs sm:text-sm font-medium border-b border-emerald-200 flex items-center gap-2 flex-shrink-0 animate-fadeIn print:hidden">
             <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
             <span>{shareSuccessMsg}</span>
           </div>
         )}
         {errorMsg && (
-          <div className="bg-red-50 text-red-800 px-5 py-2.5 text-xs sm:text-sm font-medium border-b border-red-200 flex items-center gap-2 print:hidden">
+          <div className="bg-red-50 text-red-800 px-5 py-2.5 text-xs sm:text-sm font-medium border-b border-red-200 flex items-center gap-2 flex-shrink-0 print:hidden">
             <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {/* Scrollable Quotation Viewport */}
-        <div className="overflow-x-auto w-full p-4 sm:p-8 bg-zinc-200/80 flex justify-start sm:justify-center print:p-0 print:bg-white">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto w-full p-3 sm:p-6 bg-zinc-200/80 flex justify-start sm:justify-center print:p-0 print:bg-white print:overflow-visible">
           
           {/* THE OFFICIAL QUOTATION CARD (DOM node captured as image) */}
           <div
             id={cardElementId}
-            className="bg-white border border-zinc-300 shadow-xl rounded-2xl overflow-hidden print:shadow-none print:border-none text-zinc-900"
+            className="bg-white border border-zinc-300 shadow-xl rounded-2xl print:shadow-none print:border-none text-zinc-900 flex-shrink-0 self-start mb-4"
             style={{ 
               width: '820px', 
               minWidth: '820px', 
               maxWidth: '820px',
+              height: 'auto',
+              minHeight: 'fit-content',
               fontFamily: "'Inter', system-ui, -apple-system, sans-serif" 
             }}
           >
             {/* Bodhilightning Header Banner */}
-            <div className="bg-[#1e7e34] text-white px-6 py-4 text-center border-b-4 border-amber-400">
+            <div className="bg-[#1e7e34] text-white px-6 py-4 text-center border-b-4 border-amber-400 rounded-t-2xl">
               <h1 className="text-2xl font-black tracking-wider uppercase leading-tight">
                 {storeInfo.name}, {storeInfo.location}
               </h1>
@@ -263,7 +265,7 @@ export default function QuoteModal({ quote, storeInfo, onClose }) {
             </div>
 
             {/* Footer Stripe */}
-            <div className="bg-zinc-800 text-zinc-300 text-center py-2 text-[11px] font-medium tracking-wider">
+            <div className="bg-zinc-800 text-zinc-300 text-center py-2.5 text-[11px] font-medium tracking-wider rounded-b-2xl">
               {storeInfo.name} • {storeInfo.location}
             </div>
 
@@ -272,7 +274,7 @@ export default function QuoteModal({ quote, storeInfo, onClose }) {
         </div>
 
         {/* Bottom Actions Bar */}
-        <div className="bg-white border-t border-zinc-200 px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 print:hidden">
+        <div className="bg-white border-t border-zinc-200 px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0 print:hidden">
           <div className="text-xs text-zinc-500 text-center sm:text-left">
             <span>Forward to <strong>+91{storeInfo.whatsappPhone || '8940027894'}</strong> via WhatsApp or download image</span>
           </div>
