@@ -63,14 +63,14 @@ async function runTests() {
 
   // 6. Customer Quote Creation & Calculation Check
   // Logic: final sum - discounted % + 18% gst
-  const item1 = { category: 'FR Gold', length: '90 MTR', size: '1.5 SQ.MM', color: 'Red', price: 3910, quantity: 2 }; // 7820
-  const item2 = { category: 'FR Silver', length: '45 MTR', size: '2.5 SQ.MM', color: 'Blue', price: 2873, quantity: 1 }; // 2873
-  const subtotal = (3910 * 2) + (2873 * 1); // 10693
+  const item1 = { category: 'FR Gold', length: '90 MTR', size: '1.5 SQ.MM', color: 'Red', price: 4025, quantity: 2 }; // 8050
+  const item2 = { category: 'FR Silver', length: '45 MTR', size: '2.5 SQ.MM', color: 'Blue', price: 2960, quantity: 1 }; // 2960
+  const subtotal = (4025 * 2) + (2960 * 1); // 11010
   const discountPct = 10;
-  const discountAmt = subtotal * (discountPct / 100); // 1069.3
-  const taxable = subtotal - discountAmt; // 9623.7
-  const gst = taxable * 0.18; // 1732.266
-  const grandTotal = taxable + gst; // 11355.966
+  const discountAmt = subtotal * (discountPct / 100); // 1101
+  const taxable = subtotal - discountAmt; // 9909
+  const gst = taxable * 0.18; // 1783.62
+  const grandTotal = taxable + gst; // 11692.62
 
   const quoteRes = await fetch('http://localhost:5000/api/quotes', {
     method: 'POST',
