@@ -3,7 +3,7 @@ import { Lock, KeyRound, AlertCircle, X, ShieldCheck } from 'lucide-react';
 import { api } from '../services/api';
 
 export default function AdminLogin({ isOpen, onClose, onLoginSuccess }) {
-  const [username, setUsername] = useState('admin');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -88,13 +88,6 @@ export default function AdminLogin({ isOpen, onClose, onLoginSuccess }) {
               className="w-full bg-zinc-50 border border-zinc-300 rounded-xl px-4 py-2.5 text-zinc-900 font-medium focus:ring-2 focus:ring-emerald-500 text-sm"
               placeholder="••••••••••••"
             />
-          </div>
-
-          {/* Helper hint */}
-          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-[11px] text-emerald-800">
-            <span className="font-bold">Default credentials:</span> <br />
-            User: <code className="font-mono bg-white px-1.5 py-0.5 rounded border border-emerald-200">admin</code> |
-            Pass: <code className="font-mono bg-white px-1.5 py-0.5 rounded border border-emerald-200">bodhi@8940027894</code>
           </div>
 
           <button
