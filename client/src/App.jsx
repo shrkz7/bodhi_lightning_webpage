@@ -87,7 +87,7 @@ export default function App() {
   const handleUpdateQuantity = (index, newQty) => {
     setCartItems(prev => {
       const updated = [...prev];
-      const count = parseFloat(newQty);
+      const count = parseInt(newQty, 10);
       const safeQty = isNaN(count) ? newQty : count;
       const countForCalc = isNaN(count) ? 0 : count;
       updated[index] = {

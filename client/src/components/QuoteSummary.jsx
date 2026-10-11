@@ -15,7 +15,7 @@ export default function QuoteSummary({
   const [nameError, setNameError] = useState(false);
 
   // 1. Calculate Sum
-  const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.price || 0) * (parseFloat(item.quantity) || 0)), 0);
+  const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.price || 0) * (parseInt(item.quantity, 10) || 0)), 0);
 
   // 2. Calculate Discount: (final sum - discounted %)
   const validDiscountPercent = Math.min(100, Math.max(0, parseFloat(discountPercent) || 0));
@@ -178,38 +178,38 @@ export default function QuoteSummary({
                       <div className="inline-flex items-center gap-1">
                         <button
                           type="button"
-                          onClick={() => onUpdateQuantity(idx, Math.max(0.001, Math.round(((parseFloat(item.quantity) || 1) - 1) * 1000) / 1000))}
-                          className="w-6 h-6 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-bold flex items-center justify-center text-xs"
+                          onClick={() => onUpdateQuantity(idx, Math.max(1, (parseInt(item.quantity, 10) || 1) - 1))}
+                          className="w-6 h-6 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-bold flex items-center justify-center text-xs cursor-pointer"
                         >
                           -
                         </button>
                         <input
                           type="number"
-                          step="any"
-                          min="0.001"
+                          min="1"
+                          step="1"
                           value={item.quantity}
                           onChange={(e) => onUpdateQuantity(idx, e.target.value)}
                           onBlur={(e) => {
-                            const parsed = parseFloat(e.target.value);
-                            if (isNaN(parsed) || parsed <= 0) {
+                            const parsed = parseInt(e.target.value, 10);
+                            if (isNaN(parsed) || parsed < 1) {
                               onUpdateQuantity(idx, 1);
                             } else {
                               onUpdateQuantity(idx, parsed);
                             }
                           }}
-                          className="w-14 text-center font-bold text-zinc-900 bg-white border border-zinc-200 rounded px-1 py-0.5 text-xs focus:ring-1 focus:ring-emerald-500"
+                          className="w-12 text-center font-bold text-zinc-900 bg-white border border-zinc-200 rounded px-1 py-0.5 text-xs focus:ring-1 focus:ring-emerald-500"
                         />
                         <button
                           type="button"
-                          onClick={() => onUpdateQuantity(idx, Math.round(((parseFloat(item.quantity) || 0) + 1) * 1000) / 1000)}
-                          className="w-6 h-6 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-bold flex items-center justify-center text-xs"
+                          onClick={() => onUpdateQuantity(idx, (parseInt(item.quantity, 10) || 0) + 1)}
+                          className="w-6 h-6 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-bold flex items-center justify-center text-xs cursor-pointer"
                         >
                           +
                         </button>
                       </div>
                     </td>
                     <td className="py-3 px-3 sm:px-4 text-right font-mono font-bold text-emerald-800">
-                      ₹{(parseFloat(item.price || 0) * (parseFloat(item.quantity) || 0)).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      ₹{(parseFloat(item.price || 0) * (parseInt(item.quantity, 10) || 0)).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td className="py-3 px-3 sm:px-4 text-center">
                       <button
