@@ -350,7 +350,7 @@ export default function AdminDashboard({ onBackToUser, onCatalogUpdated }) {
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right font-mono font-bold text-emerald-800 text-sm">
-                          ₹{p.price.toLocaleString('en-IN')}
+                          ₹{parseFloat(p.price || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                         <td className="py-3 px-4 text-center">
                           <div className="inline-flex items-center gap-1">
@@ -421,10 +421,10 @@ export default function AdminDashboard({ onBackToUser, onCatalogUpdated }) {
                         <td className="py-3 px-4 font-bold text-zinc-800">{q.customerName}</td>
                         <td className="py-3 px-4 text-center font-mono">{q.items ? q.items.length : 0}</td>
                         <td className="py-3 px-4 text-right text-amber-700 font-mono">
-                          {q.discountPercentage}% (-₹{q.discountAmount?.toLocaleString('en-IN')})
+                          {q.discountPercentage}% (-₹{parseFloat(q.discountAmount || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                         </td>
                         <td className="py-3 px-4 text-right font-mono font-bold text-emerald-800">
-                          ₹{q.grandTotal?.toLocaleString('en-IN')}
+                          ₹{parseFloat(q.grandTotal || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                       </tr>
                     ))}
@@ -583,7 +583,7 @@ export default function AdminDashboard({ onBackToUser, onCatalogUpdated }) {
                     type="number"
                     required
                     min="0"
-                    step="1"
+                    step="any"
                     value={editingProduct.price}
                     onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
                     className="w-full bg-zinc-50 border border-zinc-300 rounded-xl px-4 py-2 text-lg font-mono font-bold text-emerald-800"
@@ -668,8 +668,9 @@ export default function AdminDashboard({ onBackToUser, onCatalogUpdated }) {
                   <input
                     type="number"
                     required
-                    min="1"
-                    placeholder="e.g. 3910"
+                    min="0.01"
+                    step="any"
+                    placeholder="e.g. 3910.50"
                     value={newProduct.price}
                     onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                     className="w-full bg-zinc-50 border border-zinc-300 rounded-xl px-4 py-2 text-base font-mono font-bold text-emerald-800"

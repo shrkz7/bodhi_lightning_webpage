@@ -192,7 +192,7 @@ export default function QuoteModal({ quote, storeInfo, onClose }) {
                         </span>
                       </td>
                       <td className="py-2.5 px-2.5 border-r border-zinc-200 text-right font-mono text-zinc-700 whitespace-nowrap">
-                        {item.price.toLocaleString('en-IN')}
+                        {item.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td className="py-2.5 px-2 border-r border-zinc-200 text-center font-bold text-zinc-800 whitespace-nowrap">
                         {item.quantity}

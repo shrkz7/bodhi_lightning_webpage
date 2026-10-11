@@ -114,13 +114,13 @@ export default function ItemSelector({ products, onAddToCart }) {
     e.preventDefault();
     if (!currentProduct) return;
 
-    if (quantity === '' || quantity === null || isNaN(parseInt(quantity, 10)) || parseInt(quantity, 10) < 1) {
+    const count = parseFloat(quantity);
+    if (quantity === '' || quantity === null || isNaN(count) || count <= 0) {
       setQuantityError(true);
       quantityInputRef.current?.focus();
       return;
     }
 
-    const count = parseInt(quantity, 10);
     const itemToAdd = {
       productId: currentProduct.id,
       category: currentProduct.category,
@@ -129,7 +129,7 @@ export default function ItemSelector({ products, onAddToCart }) {
       color: selectedColor,
       price: currentProduct.price,
       quantity: count,
-      total: currentProduct.price * count
+      total: Math.round((currentProduct.price * count) * 100) / 100
     };
 
     onAddToCart(itemToAdd);
@@ -195,7 +195,7 @@ export default function ItemSelector({ products, onAddToCart }) {
             >
               {availableSizes.map((item) => (
                 <option key={item.id} value={item.size}>
-                  {item.size} (₹{item.price.toLocaleString('en-IN')})
+                  {item.size} (₹{item.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                 </option>
               ))}
             </select>
@@ -305,13 +305,14 @@ export default function ItemSelector({ products, onAddToCart }) {
           {/* 5. Count Needed */}
           <div className="lg:col-span-1">
             <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wide mb-1">
-              Count
+              Count / Qty
             </label>
             <div className="flex items-center">
               <input
                 ref={quantityInputRef}
                 type="number"
-                min="1"
+                step="any"
+                min="0.001"
                 placeholder="1"
                 value={quantity === null ? '' : quantity}
                 onChange={(e) => {
@@ -320,12 +321,12 @@ export default function ItemSelector({ products, onAddToCart }) {
                     setQuantity('');
                     setQuantityError(true);
                   } else {
-                    const parsed = parseInt(val, 10);
-                    if (isNaN(parsed) || parsed < 1) {
-                      setQuantity('');
+                    const parsed = parseFloat(val);
+                    if (isNaN(parsed) || parsed <= 0) {
+                      setQuantity(val);
                       setQuantityError(true);
                     } else {
-                      setQuantity(parsed);
+                      setQuantity(val);
                       setQuantityError(false);
                     }
                   }
@@ -345,7 +346,7 @@ export default function ItemSelector({ products, onAddToCart }) {
               type="submit"
               disabled={!currentProduct}
               className={`w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm text-white shadow-sm transition-all cursor-pointer ${
-                quantity === '' || quantity === null || parseInt(quantity, 10) < 1
+                quantity === '' || quantity === null || isNaN(parseFloat(quantity)) || parseFloat(quantity) <= 0
                   ? 'bg-amber-500 hover:bg-amber-600 active:scale-98 shadow-amber-200'
                   : addedAnimation 
                   ? 'bg-emerald-600 ring-2 ring-emerald-400' 
@@ -357,7 +358,7 @@ export default function ItemSelector({ products, onAddToCart }) {
                   <Check className="w-4 h-4 text-amber-300" />
                   <span>Added!</span>
                 </>
-              ) : (quantity === '' || quantity === null || parseInt(quantity, 10) < 1) ? (
+              ) : (quantity === '' || quantity === null || isNaN(parseFloat(quantity)) || parseFloat(quantity) <= 0) ? (
                 <span className="truncate">Add value to proceed</span>
               ) : (
                 <>
@@ -390,13 +391,13 @@ export default function ItemSelector({ products, onAddToCart }) {
               />
               <span className="font-semibold text-zinc-800">{selectedColor}</span>
             </div>
-            {quantity !== '' && quantity !== null && parseInt(quantity, 10) > 0 ? (
+            {quantity !== '' && quantity !== null && !isNaN(parseFloat(quantity)) && parseFloat(quantity) > 0 ? (
               <span className="font-mono flex-shrink-0 ml-2">
-                Unit Rate: <strong className="text-emerald-700 font-bold">₹{currentProduct.price.toLocaleString('en-IN')}</strong> × {quantity} = <strong className="text-zinc-900 font-bold">₹{(currentProduct.price * parseInt(quantity, 10)).toLocaleString('en-IN')}</strong>
+                Unit Rate: <strong className="text-emerald-700 font-bold">₹{currentProduct.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> × {parseFloat(quantity)} = <strong className="text-zinc-900 font-bold">₹{(currentProduct.price * parseFloat(quantity)).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
               </span>
             ) : (
               <span className="font-semibold text-amber-700 flex-shrink-0 flex items-center gap-1.5">
-                <span>Unit Rate: <strong className="text-emerald-700 font-bold">₹{currentProduct.price.toLocaleString('en-IN')}</strong></span>
+                <span>Unit Rate: <strong className="text-emerald-700 font-bold">₹{currentProduct.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></span>
                 <span className="text-zinc-300">•</span>
                 <span className="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-bold text-[11px]">Add value to proceed</span>
               </span>

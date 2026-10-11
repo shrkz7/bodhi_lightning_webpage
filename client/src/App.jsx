@@ -87,10 +87,13 @@ export default function App() {
   const handleUpdateQuantity = (index, newQty) => {
     setCartItems(prev => {
       const updated = [...prev];
+      const count = parseFloat(newQty);
+      const safeQty = isNaN(count) ? newQty : count;
+      const countForCalc = isNaN(count) ? 0 : count;
       updated[index] = {
         ...updated[index],
-        quantity: newQty,
-        total: updated[index].price * newQty
+        quantity: safeQty,
+        total: Math.round((updated[index].price * countForCalc) * 100) / 100
       };
       return updated;
     });

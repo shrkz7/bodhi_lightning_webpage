@@ -110,7 +110,7 @@ export function formatWhatsAppMessage(quote, storeInfo) {
   const itemsText = quote.items
     .map((item, idx) => {
       const colorText = item.color && item.color !== 'Single Colour' ? ` [${item.color}]` : '';
-      return `${idx + 1}. *${item.category}* (${item.length}, ${item.size}${colorText}) × ${item.quantity} = ₹${(item.price * item.quantity).toLocaleString('en-IN')}`;
+      return `${idx + 1}. *${item.category}* (${item.length}, ${item.size}${colorText}) × ${item.quantity} = ₹${(item.price * item.quantity).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     })
     .join('\n');
 

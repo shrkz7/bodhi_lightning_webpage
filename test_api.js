@@ -49,28 +49,28 @@ async function runTests() {
   const addData = await addRes.json();
   console.log("✓ Admin Product Added:", addData.success, "ID:", addData.product?.id);
 
-  // 5. Admin Update Product Price
+  // 5. Admin Update Product Price (testing decimal price support)
   const updateRes = await fetch(`http://localhost:5000/api/admin/products/${addData.product.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
-    body: JSON.stringify({ price: 7800 })
+    body: JSON.stringify({ price: 7800.50 })
   });
   const updateData = await updateRes.json();
   console.log("✓ Admin Product Price Updated to ₹", updateData.product?.price);
 
-  // 6. Customer Quote Creation & Calculation Check
+  // 6. Customer Quote Creation & Calculation Check with decimal prices & quantities
   // Logic: final sum - discounted % + 18% gst
-  const item1 = { category: 'FR Gold', length: '90 MTR', size: '1.5 SQ.MM', color: 'Red', price: 4025, quantity: 2 }; // 8050
-  const item2 = { category: 'FR Silver', length: '45 MTR', size: '2.5 SQ.MM', color: 'Blue', price: 2960, quantity: 1 }; // 2960
-  const subtotal = (4025 * 2) + (2960 * 1); // 11010
+  const item1 = { category: 'FR Gold', length: '90 MTR', size: '1.5 SQ.MM', color: 'Red', price: 4025.50, quantity: 2.5 }; // 10063.75
+  const item2 = { category: 'FR Silver', length: '45 MTR', size: '2.5 SQ.MM', color: 'Blue', price: 2960.25, quantity: 1 }; // 2960.25
+  const subtotal = Math.round(((4025.50 * 2.5) + (2960.25 * 1)) * 100) / 100; // 13024.00
   const discountPct = 10;
-  const discountAmt = subtotal * (discountPct / 100); // 1101
-  const taxable = subtotal - discountAmt; // 9909
-  const gst = taxable * 0.18; // 1783.62
-  const grandTotal = taxable + gst; // 11692.62
+  const discountAmt = Math.round((subtotal * (discountPct / 100)) * 100) / 100; // 1302.40
+  const taxable = Math.round((subtotal - discountAmt) * 100) / 100; // 11721.60
+  const gst = Math.round((taxable * 0.18) * 100) / 100; // 2109.89
+  const grandTotal = Math.round((taxable + gst) * 100) / 100; // 13831.49
 
   const quoteRes = await fetch('http://localhost:5000/api/quotes', {
     method: 'POST',
