@@ -152,12 +152,12 @@ export const DEFAULT_CATALOG = [
   { id: "cctv-genz-4+1-180", category: "CCTV Cable", length: "180 MTR", size: "GENZ 4+1", price: 5730, colors: SINGLE_COLOR },
 
   // --- 15. SUB/FLAT 3-CORE --- [Page 19]
-  { id: "subflat-1.5", category: "Sub/Flat 3-Core", length: "Per Coil/MTR", size: "1.5 SQ.MM (PVC)", price: 12875, colors: SINGLE_COLOR },
-  { id: "subflat-2.5", category: "Sub/Flat 3-Core", length: "Per Coil/MTR", size: "2.5 SQ.MM (PVC)", price: 20355, colors: SINGLE_COLOR },
-  { id: "subflat-4.0", category: "Sub/Flat 3-Core", length: "Per Coil/MTR", size: "4.0 SQ.MM (PVC)", price: 29235, colors: SINGLE_COLOR },
-  { id: "subflat-6.0", category: "Sub/Flat 3-Core", length: "Per Coil/MTR", size: "6.0 SQ.MM (PVC)", price: 43460, colors: SINGLE_COLOR },
-  { id: "subflat-10", category: "Sub/Flat 3-Core", length: "Per Coil/MTR", size: "10 SQ.MM (PVC)", price: 79650, colors: SINGLE_COLOR },
-  { id: "subflat-16", category: "Sub/Flat 3-Core", length: "Per Coil/MTR", size: "16 SQ.MM (PVC)", price: 125730, colors: SINGLE_COLOR },
+  { id: "subflat-1.5", category: "Sub/Flat 3-Core", length: "1 MTR", size: "1.5 SQ.MM (PVC)", price: 128.75, colors: SINGLE_COLOR },
+  { id: "subflat-2.5", category: "Sub/Flat 3-Core", length: "1 MTR", size: "2.5 SQ.MM (PVC)", price: 203.55, colors: SINGLE_COLOR },
+  { id: "subflat-4.0", category: "Sub/Flat 3-Core", length: "1 MTR", size: "4.0 SQ.MM (PVC)", price: 292.35, colors: SINGLE_COLOR },
+  { id: "subflat-6.0", category: "Sub/Flat 3-Core", length: "1 MTR", size: "6.0 SQ.MM (PVC)", price: 434.6, colors: SINGLE_COLOR },
+  { id: "subflat-10", category: "Sub/Flat 3-Core", length: "1 MTR", size: "10 SQ.MM (PVC)", price: 796.5, colors: SINGLE_COLOR },
+  { id: "subflat-16", category: "Sub/Flat 3-Core", length: "1 MTR", size: "16 SQ.MM (PVC)", price: 1257.3, colors: SINGLE_COLOR },
 
   // --- 16. TELEPHONE CABLE (90 MTR) --- [Page 15]
   { id: "tel-1p-0.4-90", category: "Telephone Cable", length: "90 MTR", size: "1 PAIR (0.4 SQ.MM)", price: 850, colors: SINGLE_COLOR },
