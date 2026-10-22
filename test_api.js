@@ -63,14 +63,14 @@ async function runTests() {
 
   // 6. Customer Quote Creation & Calculation Check with decimal prices & integer quantities
   // Logic: final sum - discounted % + 18% gst
-  const item1 = { category: 'FR Gold', length: '90 MTR', size: '1.5 SQ.MM', color: 'Red', price: 4025.50, quantity: 2 }; // 8051.00
-  const item2 = { category: 'FR Silver', length: '45 MTR', size: '2.5 SQ.MM', color: 'Blue', price: 2960.25, quantity: 1 }; // 2960.25
-  const subtotal = Math.round(((4025.50 * 2) + (2960.25 * 1)) * 100) / 100; // 11011.25
+  const item1 = { category: 'FR Gold', length: '90 MTR', size: '1.5 SQ.MM', color: 'Red', price: 4180.50, quantity: 2 }; // 8361.00
+  const item2 = { category: 'FR Silver', length: '45 MTR', size: '2.5 SQ.MM', color: 'Blue', price: 3040.25, quantity: 1 }; // 3040.25
+  const subtotal = Math.round(((4180.50 * 2) + (3040.25 * 1)) * 100) / 100; // 11401.25
   const discountPct = 10;
-  const discountAmt = Math.round((subtotal * (discountPct / 100)) * 100) / 100; // 1101.13
-  const taxable = Math.round((subtotal - discountAmt) * 100) / 100; // 9910.12
-  const gst = Math.round((taxable * 0.18) * 100) / 100; // 1783.82
-  const grandTotal = Math.round((taxable + gst) * 100) / 100; // 11693.94
+  const discountAmt = Math.round((subtotal * (discountPct / 100)) * 100) / 100; // 1140.13
+  const taxable = Math.round((subtotal - discountAmt) * 100) / 100; // 10261.12
+  const gst = Math.round((taxable * 0.18) * 100) / 100; // 1847.00
+  const grandTotal = Math.round((taxable + gst) * 100) / 100; // 12108.12
 
   const quoteRes = await fetch('http://localhost:5000/api/quotes', {
     method: 'POST',
